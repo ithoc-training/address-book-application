@@ -1,0 +1,41 @@
+#
+# Deploy the complete application in a Docker Compose environment including:
+# - PostgreSQL database
+# - Spring Boot Backend application
+#
+# Both containers run in a network.
+#
+version: '3.4'
+services:
+  address-book-db:
+    image: postgres:16
+    container_name: address-book-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: address-book-db
+    volumes:
+      - ~/ws/address-book-db-volume:/var/lib/postgresql/data
+    networks:
+      - address-book-network
+  address-book-backend:
+    build:
+      context: ../../address-book-backend
+      args:
+        DOCKER_BUILDKIT: 1
+    image: address-book-backend
+    container_name: address-book-backend
+    env_file:
+      - .env
+    ports:
+      - "7088:7088"
+    volumes:
+      - "${HOME}/.m2:/root/.m2"
+    depends_on:
+      - address-book-db
+    networks:
+      - address-book-network
+networks:
+  address-book-network:
