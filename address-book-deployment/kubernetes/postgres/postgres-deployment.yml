@@ -20,6 +20,9 @@ spec:
             - name: POSTGRES_DB
               value: "address-book-db"
             - name: POSTGRES_PASSWORD
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: address-book-postgres-secret
+                  key: SPRING_DATASOURCE_PASSWORD
           ports:
             - containerPort: 5432
