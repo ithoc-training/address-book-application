@@ -37,5 +37,15 @@ services:
       - address-book-db
     networks:
       - address-book-network
+  address-book-frontend:
+    build: ../../address-book-frontend
+    image: address-book-frontend
+    container_name: address-book-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - address-book-backend
+    networks:
+      - address-book-network
 networks:
   address-book-network:
