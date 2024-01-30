@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: address-book-backend
+  labels:
+    app: address-book-backend
 spec:
   selector:
     matchLabels:
@@ -23,3 +25,16 @@ spec:
               value: "postgres"
           ports:
             - containerPort: 7088 # internal port of the container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: address-book-service
+spec:
+  selector:
+    app: address-book-backend
+  ports:
+    - name: address-book-port
+      protocol: TCP
+      port: 7088
+      targetPort: 7088 # per default the same as port
