@@ -18,7 +18,10 @@ spec:
           image: olihock/address-book-backend:1.0.0
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://localhost:5432/address-book-db"
+              valueFrom:
+                configMapKeyRef:
+                  name: address-book-backend-config
+                  key: SPRING_DATASOURCE_URL
             - name: SPRING_DATASOURCE_USERNAME
               value: "postgres"
             - name: SPRING_DATASOURCE_PASSWORD
@@ -38,3 +41,11 @@ spec:
       protocol: TCP
       port: 7088
       targetPort: 7088 # per default the same as port
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: address-book-backend-config
+data:
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/address-book-db"
+  SPRING_DATASOURCE_USERNAME: "postgres"
